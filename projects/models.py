@@ -1,12 +1,12 @@
 from django.db import models
 
-from core.models import base_data
+from core.models import BaseModel, base_data
 from users.models import CustomUser
 
 # Create your models here.
 
 # Project model
-class Project(models.Model):
+class Project(BaseModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='projects')
@@ -27,7 +27,7 @@ class Project(models.Model):
 
 
 # Task model
-class Task(models.Model):
+class Task(BaseModel):
     title = models.CharField(max_length=255)
     description = models.TextField()
     status = models.CharField(max_length=20, choices=[('todo', 'To Do'), ('in_progress', 'In Progress'), ('done', 'Done')])
@@ -49,7 +49,7 @@ class Task(models.Model):
        super(Task, self).save(*args, **kwargs)
 
 # Milestone model
-class Milestone(models.Model):
+class Milestone(BaseModel):
     title = models.CharField(max_length=255)
     description = models.TextField()
     due_date = models.DateTimeField()
@@ -69,7 +69,7 @@ class Milestone(models.Model):
        super(Milestone, self).save(*args, **kwargs)
 
 # Notification model
-class Notification(models.Model):
+class Notification(BaseModel):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -86,3 +86,22 @@ class Notification(models.Model):
        base_data(self,request)
       
        super(Notification, self).save(*args, **kwargs)
+
+
+class UserNotification(BaseModel):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_notifications')
+    notification = models.ForeignKey(Notification, on_delete=models.CASCADE, related_name='user_notifications')
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'User Notification'
+        verbose_name_plural = 'User Notifications'
+        ordering = ['-date_added']
+
+    def __str__(self):
+        return f"{self.user.username} - {self.notification.message}"
+
+    def save(self, request=None, *args, **kwargs):
+       base_data(self,request)
+      
+       super(UserNotification, self).save(*args, **kwargs)
