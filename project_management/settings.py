@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'projects',
 
     'rest_framework',
+    'rest_framework_simplejwt',
     'django_celery_results',
 ]
 
@@ -77,6 +78,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project_management.wsgi.application'
 
 
+AUTH_USER_MODEL = 'users.CustomUser'  # Replace with your app and model name
+
+
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -89,6 +94,28 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=2),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': 'your-secret-key',  # Use a strong secret key
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
 }
 
 #celery

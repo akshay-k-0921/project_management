@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.models import BaseModel, base_data
+from core.models import BaseModel
 from users.models import CustomUser
 
 # Create your models here.
@@ -9,7 +9,7 @@ from users.models import CustomUser
 class Project(BaseModel):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='projects')
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Project'
@@ -19,11 +19,10 @@ class Project(BaseModel):
     def __str__(self):
         return self.name
     
-    def save(self, request=None, *args, **kwargs):
-       base_data(self,request)
-      
-       super(Project, self).save(*args, **kwargs)
-
+    def save(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
+        self.base_data(request)
+        super().save(*args, **kwargs)
 
 
 # Task model
@@ -33,7 +32,7 @@ class Task(BaseModel):
     status = models.CharField(max_length=20, choices=[('todo', 'To Do'), ('in_progress', 'In Progress'), ('done', 'Done')])
     due_date = models.DateTimeField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks')
-    assignee = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='tasks')
+    assignee = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = 'Task'
@@ -43,10 +42,10 @@ class Task(BaseModel):
     def __str__(self):
         return self.title
     
-    def save(self, request=None, *args, **kwargs):
-       base_data(self,request)
-
-       super(Task, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
+        self.base_data(request)
+        super().save(*args, **kwargs)
 
 # Milestone model
 class Milestone(BaseModel):
@@ -63,14 +62,14 @@ class Milestone(BaseModel):
     def __str__(self):
         return self.title
     
-    def save(self, request=None, *args, **kwargs):
-       base_data(self,request)
-      
-       super(Milestone, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
+        self.base_data(request)
+        super().save(*args, **kwargs)
 
 # Notification model
 class Notification(BaseModel):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -82,14 +81,14 @@ class Notification(BaseModel):
     def __str__(self):
         return self.message
 
-    def save(self, request=None, *args, **kwargs):
-       base_data(self,request)
-      
-       super(Notification, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
+        self.base_data(request)
+        super().save(*args, **kwargs)
 
 
 class UserNotification(BaseModel):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_notifications')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE, related_name='user_notifications')
     is_read = models.BooleanField(default=False)
 
@@ -101,7 +100,7 @@ class UserNotification(BaseModel):
     def __str__(self):
         return f"{self.user.username} - {self.notification.message}"
 
-    def save(self, request=None, *args, **kwargs):
-       base_data(self,request)
-      
-       super(UserNotification, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
+        self.base_data(request)
+        super().save(*args, **kwargs)

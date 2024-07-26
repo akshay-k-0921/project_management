@@ -40,3 +40,6 @@ env
 .venv
 
 *.rdb
+
+
+__init__.py
