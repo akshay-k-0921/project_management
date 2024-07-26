@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'core',
     'users',
+    'projects',
 
     'rest_framework',
     'django_celery_results',
