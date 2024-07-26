@@ -148,4 +148,16 @@ class AssigneeListCreateView(generics.ListCreateAPIView):
         # caching the response data
         cache.set(cache_key, response.data, timeout=60*15)
         return response
+    
+
+class AssignTaskView(generics.UpdateAPIView):
+    queryset = Task.active_objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated, IsManagerOrReadOnly]
+    authentication_classes = [JWTAuthentication]
+
+    def perform_update(self, serializer):
+        serializer.save()
+        # Invalidate cache after updating a task
+        cache.delete('task_list')
 #--------------------------- Task Views End --------------------------

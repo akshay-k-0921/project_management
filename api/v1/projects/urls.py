@@ -1,5 +1,5 @@
 from django.urls import re_path
-from .views import AssigneeListCreateView, ProjectListCreateView, ProjectRetrieveUpdateDestroyView, TaskListCreateView, TaskRetrieveUpdateDestroyView
+from .views import AssigneeListCreateView, ProjectListCreateView, ProjectRetrieveUpdateDestroyView, TaskListCreateView, TaskRetrieveUpdateDestroyView, AssignTaskView
 
 
 app_name = 'api_v1_projects'
@@ -13,4 +13,5 @@ urlpatterns = [
     re_path(r'^tasks/$', TaskListCreateView.as_view(), name='task-list-create'),
     re_path(r'^tasks/(?P<pk>.*)/$', TaskRetrieveUpdateDestroyView.as_view(), name='task-detail'),
     re_path(r'^assignee-list/$', AssigneeListCreateView.as_view(), name='task-assignee-list'),
+    re_path(r'^task-assign/(?P<pk>.*)/$', AssignTaskView.as_view(), name='task-assign'),
 ]
