@@ -8,7 +8,7 @@ class IsAdminOrReadOnly(BasePermission):
 
 class IsManagerOrReadOnly(BasePermission):
     def has_permission(self, request, view):
-        if request.method in ['PUT']:
+        if request.method in ['PUT','PATCH']:
             return request.user.role in ['admin', 'manager']
         if request.method in ['POST', 'DELETE']:
             return request.user.role == 'admin'
