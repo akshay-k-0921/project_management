@@ -9,7 +9,7 @@ from projects.tasks import send_email_notification
 from projects.models import Milestone, Project, Task
 from users.models import CustomUser
 from .serializers import MilestoneSerializer, ProjectSerializer, TaskSerializer
-from core.permissions import IsAdminOrReadOnly, IsManagerOrReadOnly
+from core.permissions import IsAdminOrManagerOrReadOnly
 from api.v1.users.serializers import CustomUserSerializer
 
 
@@ -18,7 +18,7 @@ from api.v1.users.serializers import CustomUserSerializer
 class ProjectListCreateView(generics.ListCreateAPIView):
     queryset = Project.active_objects.all().select_related('owner').prefetch_related('tasks', 'milestones')
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrManagerOrReadOnly]
     authentication_classes = [JWTAuthentication]
     
     # project list 
@@ -51,7 +51,7 @@ class ProjectListCreateView(generics.ListCreateAPIView):
 class ProjectRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.active_objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrManagerOrReadOnly]
     authentication_classes = [JWTAuthentication]
 
     def perform_update(self, serializer):
@@ -81,7 +81,7 @@ class ProjectRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class TaskListCreateView(generics.ListCreateAPIView):
     queryset = Task.active_objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrManagerOrReadOnly]
     authentication_classes = [JWTAuthentication]
 
     def list(self, request, *args, **kwargs):
@@ -112,7 +112,7 @@ class TaskListCreateView(generics.ListCreateAPIView):
 class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.active_objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrManagerOrReadOnly]
     authentication_classes = [JWTAuthentication]
 
     def perform_update(self, serializer):
@@ -141,7 +141,7 @@ class TaskRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class AssigneeListCreateView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.filter(role='member')
     serializer_class = CustomUserSerializer
-    permission_classes = [IsAuthenticated, IsManagerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrManagerOrReadOnly]
     authentication_classes = [JWTAuthentication]
 
     def list(self, request, *args, **kwargs):
@@ -161,7 +161,7 @@ class AssigneeListCreateView(generics.ListCreateAPIView):
 class AssignTaskView(generics.UpdateAPIView):
     queryset = Task.active_objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated, IsManagerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrManagerOrReadOnly]
     authentication_classes = [JWTAuthentication]
 
     def perform_update(self, serializer):
@@ -177,7 +177,7 @@ class AssignTaskView(generics.UpdateAPIView):
 class MilestoneListCreateView(generics.ListCreateAPIView):
     queryset = Milestone.active_objects.all()
     serializer_class = MilestoneSerializer
-    permission_classes = [IsAuthenticated, IsManagerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrManagerOrReadOnly]
     authentication_classes = [JWTAuthentication]
 
     def list(self, request, *args, **kwargs):
@@ -208,7 +208,7 @@ class MilestoneListCreateView(generics.ListCreateAPIView):
 class MilestoneRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Milestone.active_objects.all()
     serializer_class = MilestoneSerializer
-    permission_classes = [IsAuthenticated, IsManagerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrManagerOrReadOnly]
     authentication_classes = [JWTAuthentication]
 
     def perform_update(self, serializer):

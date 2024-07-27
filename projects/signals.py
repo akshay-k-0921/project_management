@@ -16,12 +16,11 @@ def task_created_or_updated(sender, instance, created, **kwargs):
         subject = 'Task Updated'
         message = f'The task "{instance.title}" has been updated.'
 
-    # Create a notification
+    # Create a notification for every user
     users = User.objects.all()
     for user in users:
         Notification.objects.create(user=user, subject=subject, message=message)
 
-    # Send email asynchronously (if needed)
     send_email_notification.delay(subject, message)
 
 
@@ -39,5 +38,4 @@ def milestone_created_or_updated(sender, instance, created, **kwargs):
     for user in users:
         Notification.objects.create(user=user, subject=subject, message=message)
 
-    # Send email asynchronously (if needed)
     send_email_notification.delay(subject, message)
