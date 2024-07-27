@@ -57,7 +57,7 @@ class Milestone(BaseModel):
     class Meta:
         verbose_name = 'Milestone'
         verbose_name_plural = 'Milestones'
-        ordering = ['title']
+        ordering = ['-date_added']
 
     def __str__(self):
         return self.title
@@ -67,40 +67,24 @@ class Milestone(BaseModel):
         self.base_data(request)
         super().save(*args, **kwargs)
 
+
 # Notification model
 class Notification(BaseModel):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=255)
     message = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.subject}"
+    
     class Meta:
         verbose_name = 'Notification'
         verbose_name_plural = 'Notifications'
-        ordering = ['-timestamp']
-
-    def __str__(self):
-        return self.message
-
-    def save(self, *args, **kwargs):
-        request = kwargs.pop('request', None)
-        self.base_data(request)
-        super().save(*args, **kwargs)
-
-
-class UserNotification(BaseModel):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    notification = models.ForeignKey(Notification, on_delete=models.CASCADE, related_name='user_notifications')
-    is_read = models.BooleanField(default=False)
-
-    class Meta:
-        verbose_name = 'User Notification'
-        verbose_name_plural = 'User Notifications'
         ordering = ['-date_added']
 
-    def __str__(self):
-        return f"{self.user.username} - {self.notification.message}"
-
     def save(self, *args, **kwargs):
         request = kwargs.pop('request', None)
         self.base_data(request)
         super().save(*args, **kwargs)
+

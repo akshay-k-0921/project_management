@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from django.core.cache import cache
 
+from projects.tasks import send_email_notification
 from projects.models import Milestone, Project, Task
 from users.models import CustomUser
 from .serializers import MilestoneSerializer, ProjectSerializer, TaskSerializer

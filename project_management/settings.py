@@ -118,6 +118,10 @@ SIMPLE_JWT = {
     'LEEWAY': 0,
 }
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 #celery
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'

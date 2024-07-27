@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from projects.models import Project, Task, Milestone, Notification, UserNotification
+from projects.models import Project, Task, Milestone, Notification
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -20,9 +20,4 @@ class MilestoneSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['id', 'user', 'message', 'timestamp']
-
-class UserNotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserNotification
-        fields = ['id', 'user', 'notification', 'is_read']
+        fields = ['id', 'user', 'subject', 'message', 'is_read']

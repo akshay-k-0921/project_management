@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from projects.models import Milestone, Notification, Project, Task, UserNotification
+from projects.models import Milestone, Notification, Project, Task
 
 # Register your models here.
 
@@ -23,12 +23,6 @@ admin.site.register(Milestone, MilestoneAdmin)
 
 
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ['user','message','timestamp']
+    list_display = ['user','message','is_read']
 
 admin.site.register(Notification, NotificationAdmin)
-
-
-class UserNotificationAdmin(admin.ModelAdmin):
-    list_display = ['user','notification','is_read']
-
-admin.site.register(UserNotification, UserNotificationAdmin)
