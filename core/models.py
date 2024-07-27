@@ -10,11 +10,6 @@ from django.db.models import Max
 class ActiveManager(models.Manager):
    def get_queryset(self):
        return super(ActiveManager, self).get_queryset().exclude(is_deleted=True)
-
-
-class DeletedManager(models.Manager):
-   def get_queryset(self):
-       return super(DeletedManager, self).get_queryset().filter(is_deleted=True)
    
 
 class BaseModel(models.Model):
@@ -45,7 +40,6 @@ class BaseModel(models.Model):
     # Model managers
     objects = models.Manager()
     active_objects = ActiveManager()
-    deleted_objects = DeletedManager()
 
     def base_data(self, request=None):
         if self._state.adding:
